@@ -167,7 +167,7 @@ html {
 /* Responsive: stack on smaller screens */
 @media (max-width: 900px) {
   .hero-content {
-    flex-direction: column;
+    flex-direction: column-reverse;
   }
   
   .canvas-container {
