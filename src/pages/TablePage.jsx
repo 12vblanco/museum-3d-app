@@ -1,12 +1,17 @@
 import { Environment, OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { Bloom, EffectComposer } from '@react-three/postprocessing';
-import { Suspense, useRef } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ModelViewer from '../components/ModelViewer';
 
 function TablePage() {
-  const controlsRef = useRef();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <main className="hero-section">
@@ -21,8 +26,8 @@ function TablePage() {
             <h2>Qing Dynasty Masterwork</h2>
             <div className="description-text">
               <p>
-                An exquisite example of traditional Chinese craftsmanship. 
-                This tea table features intricate wood carving and a warm, 
+                An exquisite example of traditional Chinese craftsmanship.
+                This tea table features intricate wood carving and a warm,
                 elegant finish that reflects centuries of cultural heritage.
               </p>
               <p className="artifact-details">
@@ -36,12 +41,7 @@ function TablePage() {
         </div>
 
         <div className="canvas-container">
-          <div className="canvas-controls-hint">
-            <span>🖱️ Drag to rotate</span>
-            <span>📌 Right-click to pan</span>
-            <span>🔍 Scroll to zoom</span>
-          </div>
-          
+          {isLoading && <LoadingSpinner />}
           <Canvas
             shadows
             dpr={[1, 2]}
@@ -57,14 +57,16 @@ function TablePage() {
             <directionalLight position={[5,5,5]} intensity={1.2} castShadow color="#ffeedd"/>
             <directionalLight position={[-3,2,4]} intensity={0.8} color="#ffcc99"/>
             <pointLight position={[0,2,0]} intensity={0.5} color="#ffaa66"/>
-            
-            <Suspense fallback={<LoadingSpinner />}>
-  <ModelViewer modelPath="/chinese_tea_table.gltf" />
+
+            <Suspense fallback={null}>
+              <ModelViewer modelPath="/chinese_tea_table.gltf" />
               <Environment preset="studio" background={false} />
-              <EffectComposer><Bloom intensity={0.3} luminanceThreshold={0.7} /></EffectComposer>
+              <EffectComposer>
+                <Bloom intensity={0.3} luminanceThreshold={0.7} />
+              </EffectComposer>
             </Suspense>
-            
-            <OrbitControls ref={controlsRef} enableZoom enablePan enableRotate zoomSpeed={1.2} minDistance={1.2} maxDistance={5} target={[0,0.6,0]} />
+
+            <OrbitControls enableZoom enablePan enableRotate zoomSpeed={1.2} minDistance={1.2} maxDistance={5} target={[0,0.6,0]} />
           </Canvas>
         </div>
       </div>
