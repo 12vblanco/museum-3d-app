@@ -26,7 +26,7 @@ function Navbar() {
           handleLinkClick(); // Also close menu when logo is clicked
         }}>
           <div className="logo-icon">🏛️</div>
-          <span className="logo-text">Digital Museum</span>
+          <span className="logo-text">Victor's Museum</span>
         </div>
 
         <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
