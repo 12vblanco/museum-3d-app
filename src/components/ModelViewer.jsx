@@ -15,12 +15,12 @@ function ModelViewer({ modelPath }) {
       const size = box.getSize(new THREE.Vector3());
       
       // Make table larger: target height 1.4 units (was 1.2)
-      const targetHeight = 1.8;
+      const targetHeight = 1;
       const scale = targetHeight / size.y;
       
       modelRef.current.scale.setScalar(scale);
       // Position so bottom of model sits on "floor" (y=0)
-      const bottomY = center.y - size.y/2;
+      const bottomY = center.y - size.y/1;
       modelRef.current.position.set(
         -center.x * scale,
         -bottomY * scale,
