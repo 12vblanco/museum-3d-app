@@ -2,6 +2,7 @@ import { Environment, OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { Bloom, EffectComposer } from '@react-three/postprocessing';
 import { Suspense, useRef } from 'react';
+import LoadingSpinner from '../components/LoadingSpinner';
 import ModelViewer from '../components/ModelViewer';
 
 function TablePage() {
@@ -57,8 +58,8 @@ function TablePage() {
             <directionalLight position={[-3,2,4]} intensity={0.8} color="#ffcc99"/>
             <pointLight position={[0,2,0]} intensity={0.5} color="#ffaa66"/>
             
-            <Suspense fallback={<mesh><boxGeometry args={[1,1,1]} /><meshStandardMaterial color="#8b7355" wireframe /></mesh>}>
-              <ModelViewer modelPath="/chinese_tea_table.gltf" />
+            <Suspense fallback={<LoadingSpinner />}>
+  <ModelViewer modelPath="/chinese_tea_table.gltf" />
               <Environment preset="studio" background={false} />
               <EffectComposer><Bloom intensity={0.3} luminanceThreshold={0.7} /></EffectComposer>
             </Suspense>

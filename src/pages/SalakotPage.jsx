@@ -2,7 +2,8 @@ import { Environment, OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { Bloom, EffectComposer } from '@react-three/postprocessing';
 import { Suspense, useRef } from 'react';
-import SalakotViewer from '../components/SalakotViewer'; // We'll create this
+import LoadingSpinner from '../components/LoadingSpinner';
+import SalakotViewer from '../components/SalakotViewer';
 
 function SalakotPage() {
   const controlsRef = useRef();
@@ -59,13 +60,8 @@ function SalakotPage() {
             <pointLight position={[0,2,0]} intensity={0.5} color="#ffdd99"/>
             <pointLight position={[1,1,2]} intensity={0.3} color="#ffe8cc"/>
             
-            <Suspense fallback={
-              <mesh>
-                <boxGeometry args={[1,1,1]} />
-                <meshStandardMaterial color="#8b7355" wireframe />
-              </mesh>
-            }>
-              <SalakotViewer modelPath="/salakot-merged6.glb" />
+            <Suspense fallback={<LoadingSpinner />}>
+                <SalakotViewer modelPath="/salakot-merged6.glb" />
               <Environment preset="forest" background={false} />
               <EffectComposer>
                 <Bloom intensity={0.25} luminanceThreshold={0.7} />

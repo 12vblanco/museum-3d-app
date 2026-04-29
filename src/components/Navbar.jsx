@@ -10,8 +10,6 @@ function Navbar() {
     { name: 'Home', path: '/' },
     { name: 'Chinese Table', path: '/table' },
     { name: 'Salakot', path: '/salakot' },
-    { name: 'Visit', path: '#' },
-    { name: 'About', path: '#' }
   ];
 
   return (
