@@ -1,24 +1,32 @@
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const navItems = ['Collection', 'Exhibitions', 'Visit', 'About'];
+  const navItems = [
+    { name: 'Home', path: '/' },
+    { name: 'Chinese Table', path: '/table' },
+    { name: 'Salakot', path: '/salakot' },
+    { name: 'Visit', path: '#' },
+    { name: 'About', path: '#' }
+  ];
 
   return (
     <nav className="navbar">
       <div className="nav-container">
-        <div className="logo">
+        <div className="logo" onClick={() => navigate('/')}>
           <div className="logo-icon">🏛️</div>
-          <span className="logo-text">Victor's Museum</span>
+          <span className="logo-text">Digital Museum</span>
         </div>
 
         <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
           {navItems.map((item, index) => (
-            <a key={index} href="#" className="nav-link">
-              {item}
-            </a>
+            <Link key={index} to={item.path} className="nav-link">
+              {item.name}
+            </Link>
           ))}
         </div>
 
