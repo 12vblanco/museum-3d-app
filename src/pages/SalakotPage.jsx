@@ -46,13 +46,12 @@ function SalakotPage() {
         </div>
 
         <div className="canvas-container">
-          {/* Overlay shown while loading */}
           {isLoading && <LoadingSpinner />}
 
           <Canvas
             shadows
             dpr={[1, 2]}
-            camera={{ position: [0, 1.2, 3.5], fov: 40 }}
+            camera={{ position: [0, 0.8, 3.5], fov: 40 }}
             gl={{ antialias: true, powerPreference: "high-performance" }}
             style={{
               background: 'radial-gradient(circle at center, #2a3b2a 0%, #0f1a0f 100%)',
