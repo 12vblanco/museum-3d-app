@@ -41,6 +41,11 @@ function TablePage() {
         </div>
 
         <div className="canvas-container">
+          <div className="canvas-controls-hint">
+            <span>🖱️ Drag to rotate</span>
+            <span>📌 Right-click + drag to pan</span>
+            <span>🔍 Scroll to zoom</span>
+          </div>
           {isLoading && <LoadingSpinner />}
           <Canvas
             shadows
