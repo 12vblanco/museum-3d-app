@@ -15,7 +15,7 @@ function ModelViewer({ modelPath }) {
       const size = box.getSize(new THREE.Vector3());
       
       // Make table larger: target height 1.4 units (was 1.2)
-      const targetHeight = 2.6;
+      const targetHeight = 1.8;
       const scale = targetHeight / size.y;
       
       modelRef.current.scale.setScalar(scale);
