@@ -13,21 +13,19 @@ function SalakotViewer({ modelPath }) {
       const center = box.getCenter(new THREE.Vector3());
       const size = box.getSize(new THREE.Vector3());
       
-      // Scale based on the largest dimension (width, height, or depth)
-      // This ensures the model fits within the viewport
       const maxDimension = Math.max(size.x, size.y, size.z);
-      const targetSize = 2.2;   // Desired max dimension in world units (adjust to fit)
+      const targetSize = 2.2;
       const scale = targetSize / maxDimension;
       
-      // Center the model
+      // Lift the model so it's not too low
+      const yOffset = 0.35;   // ← adjust to taste (0.3 to 0.5)
+      
       modelRef.current.scale.setScalar(scale);
       modelRef.current.position.set(
         -center.x * scale,
-        -center.y * scale,
+        -center.y * scale + yOffset,
         -center.z * scale
       );
-      
-      console.log('Salakot fit scale:', scale);
     }
   }, [gltf]);
   

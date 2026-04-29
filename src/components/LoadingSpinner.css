@@ -9,24 +9,47 @@
   backdrop-filter: blur(4px);
 }
 
-.blob {
-  width: 60px;
-  height: 60px;
-  background: linear-gradient(135deg, #d4a373, #f1f1f1);
-  border-radius: 50%;
-  animation: blob-pulse 1.5s ease-in-out infinite;
-  margin-bottom: 1rem;
+.loading-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  padding: 2rem;
+  border-radius: 40px;
+  min-width: 200px;
 }
 
-@keyframes blob-pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.7;
-  }
-  50% {
-    transform: scale(1.2);
-    opacity: 1;
-  }
+.progress-circle {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+.progress-circle svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.progress-percent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #f1f1f1;
+  font-family: monospace;
+}
+
+.loading-text {
+  margin-top: 1rem;
+  color: #f1f1f1;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  font-family: 'Inter', sans-serif;
 }
 
 .loading-text {
