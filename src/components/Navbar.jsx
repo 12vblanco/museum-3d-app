@@ -1,16 +1,15 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import './Navbar.css';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "./Navbar.css";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   const navItems = [
-    { name: 'Home', path: '/' },
-    { name: 'Chinese Table', path: '/table' },
-    { name: 'Salakot', path: '/salakot' },
-    
+    { name: "Home", path: "/" },
+    { name: "Chinese Table", path: "/table" },
+    { name: "Salakot", path: "/salakot" },
   ];
 
   // Function to close menu when a link is clicked
@@ -21,21 +20,24 @@ function Navbar() {
   return (
     <nav className="navbar">
       <div className="nav-container">
-        <div className="logo" onClick={() => {
-          navigate('/');
-          handleLinkClick(); // Also close menu when logo is clicked
-        }}>
+        <div
+          className="logo"
+          onClick={() => {
+            navigate("/");
+            handleLinkClick(); // Also close menu when logo is clicked
+          }}
+        >
           <div className="logo-icon">🏛️</div>
-          <span className="logo-text">Victor's Museum</span>
+          <span className="logo-text">NMP Demo</span>
         </div>
 
-        <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
+        <div className={`nav-menu ${isMenuOpen ? "active" : ""}`}>
           {navItems.map((item, index) => (
-            <Link 
-              key={index} 
-              to={item.path} 
+            <Link
+              key={index}
+              to={item.path}
               className="nav-link"
-              onClick={handleLinkClick}  // ← Close menu on click
+              onClick={handleLinkClick} // ← Close menu on click
             >
               {item.name}
             </Link>
@@ -44,8 +46,8 @@ function Navbar() {
 
         <div className="nav-actions">
           <button className="search-btn">🔍</button>
-          <button 
-            className="menu-toggle" 
+          <button
+            className="menu-toggle"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             ☰
