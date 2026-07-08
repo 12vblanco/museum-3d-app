@@ -59,17 +59,17 @@ function TablePage() {
               height: '100%'
             }}
           >
-            <ambientLight intensity={0.4} />
-            <directionalLight position={[5,5,5]} intensity={0.7} castShadow color="#ffeedd"/>
-            <directionalLight position={[-3,2,4]} intensity={0.4} color="#ffcc99"/>
-            <pointLight position={[0,2,0]} intensity={0.25} color="#ffaa66"/>
+            <ambientLight intensity={0.5} />
+            <directionalLight position={[5,5,5]} intensity={0.95} castShadow color="#ffeedd"/>
+            <directionalLight position={[-3,2,4]} intensity={0.6} color="#ffcc99"/>
+            <pointLight position={[0,2,0]} intensity={0.35} color="#ffaa66"/>
 
             <Suspense fallback={null}>
               <ModelViewer modelPath={MODEL_PATH} onLoaded={handleLoaded} />
             </Suspense>
             {/* Environment in its own Suspense so it never blocks the model */}
             <Suspense fallback={null}>
-              <Environment files="/hdri/potsdamer_platz_1k.hdr" background={false} environmentIntensity={0.5} />
+              <Environment files="/hdri/potsdamer_platz_1k.hdr" background={false} environmentIntensity={0.7} />
             </Suspense>
             <EffectComposer>
               <Bloom intensity={0.15} luminanceThreshold={0.9} />
