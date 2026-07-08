@@ -1,17 +1,17 @@
-import { Environment, OrbitControls } from '@react-three/drei';
+import { Environment, OrbitControls, useGLTF } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { Bloom, EffectComposer } from '@react-three/postprocessing';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useCallback, useState } from 'react';
+import CanvasErrorBoundary from '../components/CanvasErrorBoundary';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ModelViewer from '../components/ModelViewer';
 
+const MODEL_PATH = '/chinese_tea_table-optimized.glb';
+useGLTF.preload(MODEL_PATH);
+
 function TablePage() {
   const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 500);
-    return () => clearTimeout(timer);
-  }, []);
+  const handleLoaded = useCallback(() => setIsLoading(false), []);
 
   return (
     <main className="hero-section">
@@ -47,10 +47,11 @@ function TablePage() {
             <span>🔍 Scroll to zoom</span>
           </div>
           {isLoading && <LoadingSpinner />}
+          <CanvasErrorBoundary>
           <Canvas
             shadows
             dpr={[1, 2]}
-            camera={{ position: [0, 1.2, 3.5], fov: 40 }}
+            camera={{ position: [0, 0.9, 3.4], fov: 40 }}
             gl={{ antialias: true, powerPreference: "high-performance" }}
             style={{
               background: 'radial-gradient(circle at center, #3d2e22 0%, #1e1814 100%)',
@@ -58,21 +59,25 @@ function TablePage() {
               height: '100%'
             }}
           >
-            <ambientLight intensity={0.6} />
-            <directionalLight position={[5,5,5]} intensity={1.2} castShadow color="#ffeedd"/>
-            <directionalLight position={[-3,2,4]} intensity={0.8} color="#ffcc99"/>
-            <pointLight position={[0,2,0]} intensity={0.5} color="#ffaa66"/>
+            <ambientLight intensity={0.4} />
+            <directionalLight position={[5,5,5]} intensity={0.7} castShadow color="#ffeedd"/>
+            <directionalLight position={[-3,2,4]} intensity={0.4} color="#ffcc99"/>
+            <pointLight position={[0,2,0]} intensity={0.25} color="#ffaa66"/>
 
             <Suspense fallback={null}>
-              <ModelViewer modelPath="/chinese_tea_table.gltf" />
-              <Environment preset="studio" background={false} />
-              <EffectComposer>
-                <Bloom intensity={0.3} luminanceThreshold={0.7} />
-              </EffectComposer>
+              <ModelViewer modelPath={MODEL_PATH} onLoaded={handleLoaded} />
             </Suspense>
+            {/* Environment in its own Suspense so it never blocks the model */}
+            <Suspense fallback={null}>
+              <Environment files="/hdri/potsdamer_platz_1k.hdr" background={false} environmentIntensity={0.5} />
+            </Suspense>
+            <EffectComposer>
+              <Bloom intensity={0.15} luminanceThreshold={0.9} />
+            </EffectComposer>
 
-            <OrbitControls enableZoom enablePan enableRotate zoomSpeed={1.2} minDistance={1.2} maxDistance={5} target={[0,0.6,0]} />
+            <OrbitControls enableZoom enablePan enableRotate zoomSpeed={1.2} minDistance={1.5} maxDistance={5} target={[0,0,0]} />
           </Canvas>
+          </CanvasErrorBoundary>
         </div>
       </div>
     </main>

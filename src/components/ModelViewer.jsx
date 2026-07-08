@@ -1,44 +1,39 @@
-import { useLoader } from '@react-three/fiber';
+import { useGLTF } from '@react-three/drei';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-function ModelViewer({ modelPath }) {
+function ModelViewer({ modelPath, onLoaded, targetRadius = 1.1 }) {
   const modelRef = useRef();
-  const gltf = useLoader(GLTFLoader, modelPath);
-  
+  const { scene } = useGLTF(modelPath);
+
   useEffect(() => {
-    if (gltf && modelRef.current) {
-      // Compute bounding box
-      const box = new THREE.Box3().setFromObject(gltf.scene);
-      const center = box.getCenter(new THREE.Vector3());
-      const size = box.getSize(new THREE.Vector3());
-      
-      // Make table larger: target height 1.4 units (was 1.2)
-      const targetHeight = 1;
-      const scale = targetHeight / size.y;
-      
-      modelRef.current.scale.setScalar(scale);
-      // Position so bottom of model sits on "floor" (y=0)
-      const bottomY = center.y - size.y/1;
-      modelRef.current.position.set(
-        -center.x * scale,
-        -bottomY * scale,
-        -center.z * scale
-      );
-      
-      console.log('Table scale applied:', scale);
-    }
-  }, [gltf]);
-  
-  return (
-    <primitive 
-      ref={modelRef}
-      object={gltf.scene} 
-      castShadow
-      receiveShadow
-    />
-  );
+    if (!modelRef.current) return;
+
+    // castShadow/receiveShadow on <primitive> doesn't reach child meshes
+    scene.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
+    });
+
+    // Normalize by bounding sphere so every exhibit occupies the same
+    // visual footprint regardless of its proportions, centered on the origin
+    const box = new THREE.Box3().setFromObject(scene);
+    const sphere = box.getBoundingSphere(new THREE.Sphere());
+    const scale = targetRadius / sphere.radius;
+
+    modelRef.current.scale.setScalar(scale);
+    modelRef.current.position.set(
+      -sphere.center.x * scale,
+      -sphere.center.y * scale,
+      -sphere.center.z * scale
+    );
+
+    onLoaded?.();
+  }, [scene, onLoaded, targetRadius]);
+
+  return <primitive ref={modelRef} object={scene} />;
 }
 
 export default ModelViewer;

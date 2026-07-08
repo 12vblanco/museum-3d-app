@@ -1,21 +1,17 @@
-import { Environment, OrbitControls } from '@react-three/drei';
+import { Environment, OrbitControls, useGLTF } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { Bloom, EffectComposer } from '@react-three/postprocessing';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useCallback, useState } from 'react';
+import CanvasErrorBoundary from '../components/CanvasErrorBoundary';
 import LoadingSpinner from '../components/LoadingSpinner';
-import SalakotViewer from '../components/SalakotViewer';
+import ModelViewer from '../components/ModelViewer';
+
+const MODEL_PATH = '/salakot-optimized.glb';
+useGLTF.preload(MODEL_PATH);
 
 function SalakotPage() {
   const [isLoading, setIsLoading] = useState(true);
-
-  // Hide overlay after a short delay when models are done
-  // (useProgress will reach 100, then we delay hiding to let the first paint happen)
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 500); // Adjust delay as needed
-    return () => clearTimeout(timer);
-  }, []);
+  const handleLoaded = useCallback(() => setIsLoading(false), []);
 
   return (
     <main className="hero-section">
@@ -53,10 +49,11 @@ function SalakotPage() {
           </div>
           {isLoading && <LoadingSpinner />}
 
+          <CanvasErrorBoundary>
           <Canvas
             shadows
             dpr={[1, 2]}
-            camera={{ position: [0, 0.8, 3.5], fov: 40 }}
+            camera={{ position: [0, 0.9, 3.4], fov: 40 }}
             gl={{ antialias: true, powerPreference: "high-performance" }}
             style={{
               background: 'radial-gradient(circle at center, #2a3b2a 0%, #0f1a0f 100%)',
@@ -71,23 +68,27 @@ function SalakotPage() {
             <pointLight position={[1,1,2]} intensity={0.3} color="#ffe8cc"/>
 
             <Suspense fallback={null}> {/* No fallback inside canvas – overlay handles it */}
-              <SalakotViewer modelPath="/salakot-merged6.glb" />
-              <Environment preset="forest" background={false} />
-              <EffectComposer>
-                <Bloom intensity={0.25} luminanceThreshold={0.7} />
-              </EffectComposer>
+              <ModelViewer modelPath={MODEL_PATH} onLoaded={handleLoaded} />
             </Suspense>
+            {/* Environment in its own Suspense so it never blocks the model */}
+            <Suspense fallback={null}>
+              <Environment files="/hdri/forest_slope_1k.hdr" background={false} />
+            </Suspense>
+            <EffectComposer>
+              <Bloom intensity={0.25} luminanceThreshold={0.7} />
+            </EffectComposer>
 
             <OrbitControls
               enableZoom={true}
               enablePan={true}
               enableRotate={true}
               zoomSpeed={1.2}
-              minDistance={1.2}
+              minDistance={1.5}
               maxDistance={5}
-              target={[0, 0.7, 0]}
+              target={[0, 0, 0]}
             />
           </Canvas>
+          </CanvasErrorBoundary>
         </div>
       </div>
     </main>
